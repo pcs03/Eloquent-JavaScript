@@ -39,3 +39,9 @@ function createChessBoard(size) {
 }
 
 console.log(createChessBoard(20));
+
+let arr = [1,2,3,4,5];
+
+let sum = arr.reduce((acc, n) => acc + n);
+
+console.log(sum);

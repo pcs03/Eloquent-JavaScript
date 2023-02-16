@@ -1,3 +1,7 @@
+const SCRIPTS = require("./05_higher_order/code/scripts.js");
+
+require("./05_higher_order/code/scripts.js");
+
 // Flattening
 
 /* 
@@ -54,4 +58,63 @@ function everyUsingSome(array, f) {
     return !array.some(element => !f(element));
 }
 
-console.log(everyUsingSome([1,2,3,4,5,6,7,8,9], n => n < 10));
+//console.log(everyUsingSome([1,2,3,4,5,6,7,8,9], n => n < 10));
+
+
+function scriptArray(text) {
+    let scripts = [];
+    for (let char of text) {
+        let script = characterScript(char.codePointAt(0));
+        if (script !== null) scripts.push(script); 
+    }
+    return scripts;
+}
+
+function characterScript(code) {
+    for (let script of SCRIPTS) {
+        if (script.ranges.some(([from, to]) => {
+            return code >= from && code < to;
+        }))
+        return script.name;
+    }
+    return null;
+}
+
+function countBy(items, groupName) {
+    let counts = [];
+    for (let item of items) {
+        let name = item;
+        let known = counts.findIndex(c => c.name === name);
+        if (known == -1) {
+            counts.push({name, count: 1});
+        } else {
+            counts[known].count++;
+        }
+    }
+    return counts;
+}
+
+console.log(countBy(scriptArray("Русский военный корабль, иди на хуй fuck russia"), n => SCRIPTS.name));
+
+function findmax(array) {
+    let maximum = {name: null, count: 0};
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].count > maximum.count) maximum = array[i];
+    }
+    return maximum.name
+}
+
+
+let dominant = findmax(countBy(scriptArray("Русский военный корабль, иди на хуй fuck russia"), n => SCRIPTS.name));
+
+
+function writingDirection(text) {
+    let maximum = Math.max()
+}
+
+
+
+// console.log(characterScript(104));
+
+// console.log(scriptArray("Русский военный корабль, иди на хуйdfbg"));
+

@@ -61,32 +61,48 @@ function everyUsingSome(array, f) {
 //console.log(everyUsingSome([1,2,3,4,5,6,7,8,9], n => n < 10));
 
 
-function scriptArray(text) {
-    let scripts = [];
+// Dominant writing direction
+
+/* 
+Write a function that computes the dominant writing direction in a string of text. Remember that each script object has a direction property that can be "ltr" (left to right), "rtl" (right to left), or "ttb" (top to bottom).
+
+The dominant direction is the direction of a majority of the characters that have a script associated with them. The characterScript and countBy functions defined earlier in the chapter are probably useful here.
+*/
+
+// main function
+
+function scriptDirection(text) {
+    let directions = [];
     for (let char of text) {
-        let script = characterScript(char.codePointAt(0));
-        if (script !== null) scripts.push(script); 
+        directions.push(charToDirection(char));
     }
-    return scripts;
+    let directionsCount = countArray(directions.filter(value => value !== undefined));
+
+    let dominantDirection = {name: null, count: 0};
+    for (let object of directionsCount) {
+        if (object.count > dominantDirection.count) {
+            dominantDirection = object;
+        }
+    }
+    return dominantDirection.name;
 }
 
-function characterScript(code) {
+function charToDirection(char) {
+    let unicode = char.codePointAt(0);
     for (let script of SCRIPTS) {
         if (script.ranges.some(([from, to]) => {
-            return code >= from && code < to;
+            return unicode >= from && unicode < to;
         }))
-        return script.name;
+        return script.direction;
     }
-    return null;
 }
 
-function countBy(items, groupName) {
+function countArray(array) {
     let counts = [];
-    for (let item of items) {
-        let name = item;
-        let known = counts.findIndex(c => c.name === name);
-        if (known == -1) {
-            counts.push({name, count: 1});
+    for (let element of array) {
+        let known = counts.findIndex(c => c.name === element);
+        if (known === -1) {
+            counts.push({name: element, count: 1});
         } else {
             counts[known].count++;
         }
@@ -94,27 +110,4 @@ function countBy(items, groupName) {
     return counts;
 }
 
-console.log(countBy(scriptArray("Русский военный корабль, иди на хуй fuck russia"), n => SCRIPTS.name));
-
-function findmax(array) {
-    let maximum = {name: null, count: 0};
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].count > maximum.count) maximum = array[i];
-    }
-    return maximum.name
-}
-
-
-let dominant = findmax(countBy(scriptArray("Русский военный корабль, иди на хуй fuck russia"), n => SCRIPTS.name));
-
-
-function writingDirection(text) {
-    let maximum = Math.max()
-}
-
-
-
-// console.log(characterScript(104));
-
-// console.log(scriptArray("Русский военный корабль, иди на хуйdfbg"));
-
+console.log(scriptDirection("Русский военный корабль иди на хуй, Русский военный корабль иди на хуй, الله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكبرالله أكАллах бол хамгийн агууАллах бол хамгийн агууАллах бол хамгийн агууبرالله أكبر иди на хуй Fuck Russia"))
